@@ -20,9 +20,9 @@ export default function Messages({ messages }: MessagesProps) {
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center gap-2 h-full">
           <MessageSquare className="size-8 text-blue-500" />
-          <h3 className="font-semibold text-xl text-white">You're all set!</h3>
+          <h3 className="font-semibold text-xl text-white">Você está pronto!</h3>
           <p className="text-zinc-500 text-sm">
-            Ask your first question to get started.
+            Faça sua primeira pergunta para começar.
           </p>
         </div>
       )}

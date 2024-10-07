@@ -5,9 +5,9 @@ export const ragChat = new RAGChat({
   model: upstash('meta-llama/Meta-Llama-3-8B-Instruct'),
   redis: redis,
   promptFn: ({ context, question, chatHistory }) =>
-    `Você é um assistente que responde perguntas de usários que tem dúvidas sobre a ferramenta Growp.
+    `Você é um assistente que responde perguntas sobre os artigos do site TabNews.
     Responda em português (pt-BR) e seja breve na resposta. 
-    Não fuja do contexto.
+    Não fuja do contexto. Pode usar emojis.
       ------
       Histórico:
       ${chatHistory}
