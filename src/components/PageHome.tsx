@@ -20,7 +20,7 @@ const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL
 
 export default function PageHome() {
   return (
-    <main className="relative overflow-hidden bg-slate-950 text-slate-200 w-full h-screen">
+    <main className="relative overflow-hidden bg-slate-950 text-slate-200 w-full min-h-svh">
       <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between h-full">
         <header className="relative z-20 py-10 text-center">
           <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-slate-950 p-3 text-2xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
