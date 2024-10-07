@@ -24,7 +24,7 @@ export default function ChatWrapper({ sessionId, initialMessages, reconstructedU
   return (
     <div className="relative flex flex-col h-svh overflow-hidden">
       <div className='fixed top-4 right-4'>
-        <Button color='primary' startContent={<BookOpen />} as={Link} href={reconstructedUrl}>Ir para o artigo</Button>
+        <Button color='primary' startContent={<BookOpen />} as={Link} href={reconstructedUrl} target="_blank">Ir para o artigo</Button>
       </div>
 
       <div className="flex-grow max-h-full h-full overflow-y-auto bg-gray-950">
