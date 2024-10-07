@@ -21,21 +21,21 @@ const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL
 export default function PageHome() {
   return (
     <main className="relative overflow-hidden bg-slate-950 text-slate-200 w-full min-h-svh">
-      <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between h-full">
-        <header className="relative z-20 py-10 text-center">
-          <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-slate-950 p-3 text-2xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
+      <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between min-h-svh py-4">
+        <header className="relative z-20 text-center">
+          <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-slate-950 p-2 text-xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
             <Brain />
           </span>
-          <h1 className="mb-4 text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl">
+          <h1 className="mb-4 text-2xl font-semibold leading-tight">
             MY-PROXY-RAG
           </h1>
-          <p className="mb-6 text-base leading-snug text-slate-400 sm:text-lg md:text-xl lg:leading-snug">
+          <p className="mb-6 leading-snug text-slate-400 lg:leading-snug">
             O MY-PROXY-RAG permite interagir com os artigos que escrevi na plataforma TabNews 🎊 Basta adicionar <code className="font-mono text-blue-500">{APP_URL}</code> na frente de qualquer URL de algum artigo em <code className="font-mono text-blue-500">{KNOWLEDGE_URL}</code>.
           </p>
         </header>
 
         <section className="relative z-20">
-          <div className="p-4 border rounded-3xl bg-gray-900 border-gray-900 mx-auto h-[300px] md:h-[400px] aspect-video">
+          <div className="p-4 border rounded-3xl bg-gray-900 border-gray-900 mx-auto h-[300px] aspect-video">
             <Compare
               firstImage="/prev.png"
               secondImage="/result.png"
