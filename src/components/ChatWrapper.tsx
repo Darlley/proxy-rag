@@ -2,10 +2,10 @@
 
 import { Button } from '@nextui-org/react';
 import { Message, useChat } from 'ai/react';
+import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { ChatInput } from './ChatInput';
 import Messages from './Messages';
-import { BookOpen } from 'lucide-react';
 
 interface ChatProps {
   sessionId: string;
@@ -22,11 +22,12 @@ export default function ChatWrapper({ sessionId, initialMessages, reconstructedU
     });
 
   return (
-    <div className="relative h-svh bg-zinc-900 flex divide-y divide-zinc-700 flex-col justify-between gap-2">
+    <div className="relative flex flex-col h-svh overflow-hidden">
       <div className='fixed top-4 right-4'>
-        <Button color='primary' startContent={<BookOpen />} as={Link} href={reconstructedUrl}>Voltar para o artigo</Button>
+        <Button color='primary' startContent={<BookOpen />} as={Link} href={reconstructedUrl}>Ir para o artigo</Button>
       </div>
-      <div className="flex-1 bg-zinc-800 justify-between flex flex-col">
+
+      <div className="flex-grow max-h-full h-full overflow-y-auto bg-gray-950">
         <Messages messages={messages} />
       </div>
 

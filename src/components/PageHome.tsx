@@ -20,10 +20,10 @@ const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL
 
 export default function PageHome() {
   return (
-    <main className="relative overflow-hidden bg-slate-950 text-slate-200 w-full min-h-svh">
-      <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between min-h-svh py-4">
+    <main className="relative overflow-hidden bg-gray-950 text-gray-200 w-full min-h-svh">
+      <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between min-h-svh p-4">
         <header className="relative z-20 text-center">
-          <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-slate-950 p-2 text-xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
+          <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-gray-950 p-2 text-xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
             <Brain />
           </span>
           <h1 className="mb-4 text-2xl font-semibold leading-tight">
@@ -110,7 +110,7 @@ const BGGrid = () => {
       }}
       className="absolute bottom-0 left-0 right-0 top-0"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/0 to-slate-950/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-950/80 via-gray-950/0 to-gray-950/80" />
       <Beams />
     </div>
   );
@@ -261,7 +261,7 @@ const Card = ({
         ease: "easeInOut",
         delay: 0.25,
       }}
-      className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950/50 to-slate-900/80 p-6 ${className}`}
+      className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-gray-950/50 to-slate-900/80 p-6 ${className}`}
     >
       {children}
     </motion.div>
