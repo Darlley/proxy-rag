@@ -21,7 +21,7 @@ const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL
 export default function PageHome() {
   return (
     <main className="relative overflow-hidden bg-gray-950 text-gray-200 w-full min-h-svh">
-      <div className="mx-auto max-w-7xl px-4 md:px-8 flex flex-col items-center justify-between min-h-svh p-4">
+      <div className="mx-auto max-w-7xl p-4 md:p-8 flex flex-col items-center justify-between min-h-svh">
         <header className="relative z-20 text-center">
           <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-gray-950 p-2 text-xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
             <Brain />
@@ -35,13 +35,13 @@ export default function PageHome() {
         </header>
 
         <section className="relative z-20">
-          <div className="p-4 border rounded-3xl bg-gray-900 border-gray-900 mx-auto h-[300px] aspect-video">
+          <div className="p-4 border rounded-2xl bg-gray-900 border-gray-900 mx-auto h-[260px] lg:h-[300px] aspect-video">
             <Compare
               firstImage="/prev.png"
               secondImage="/result.png"
               firstImageClassName="object-cover object-left-top w-full"
               secondImageClassname="object-cover object-left-top w-full"
-              className="w-full h-full rounded-[22px] md:rounded-lg"
+              className="w-full h-full rounded-lg"
               slideMode="hover"
               autoplay={true}
             />
@@ -49,12 +49,11 @@ export default function PageHome() {
 
           <div className="flex justify-center mt-4">
             <Button
-              endContent={<Brain />}
+              endContent={<Brain className="size-5 stroke-1" />}
               as={Link}
               color="primary"
               variant="shadow"
               href={`${APP_URL}https://www.tabnews.com.br/darlleybbf/escopos-var-let-const-e-seletores-anotacoes-do-pre-work-bootcamp-react-js-do-fernando-daciuk`}
-              target="_blank"
             >
               Testar
             </Button>

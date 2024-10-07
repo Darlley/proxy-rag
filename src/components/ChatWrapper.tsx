@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button, ButtonGroup } from '@nextui-org/react';
 import { Message, useChat } from 'ai/react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Home } from 'lucide-react';
 import Link from 'next/link';
 import { ChatInput } from './ChatInput';
 import Messages from './Messages';
@@ -24,7 +24,10 @@ export default function ChatWrapper({ sessionId, initialMessages, reconstructedU
   return (
     <div className="relative flex flex-col h-svh overflow-hidden">
       <div className='fixed top-4 right-4'>
-        <Button color='primary' startContent={<BookOpen />} as={Link} href={reconstructedUrl} target="_blank">Ir para o artigo</Button>
+        <ButtonGroup>
+          <Button color='primary' startContent={<Home className="size-5 stroke-[1.5]" />} as={Link} href="/" isIconOnly />
+          <Button color='primary' startContent={<BookOpen className="size-5 stroke-[1.5]" />} as={Link} href={reconstructedUrl} target="_blank">Ir para o artigo</Button>
+        </ButtonGroup>
       </div>
 
       <div className="flex-grow max-h-full h-full overflow-y-auto bg-gray-950">
