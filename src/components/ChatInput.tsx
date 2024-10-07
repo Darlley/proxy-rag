@@ -39,18 +39,16 @@ export const ChatInput = ({
                     setInput('');
                   }
                 }}
-                placeholder="Enter your question..."
+                placeholder="Faça sua pergunta..."
+                endContent={<Button
+                  type="submit"
+                  color="primary"
+                  isIconOnly
+                >
+                  <Send className="size-4" />
+                </Button>}
                 className="resize-none bg-zinc-800 hover:bg-zinc-900 rounded-xl text-base"
               />
-
-              <Button
-                size="sm"
-                type="submit"
-                color="primary"
-                className="absolute z-10 border border-border bg-zinc-900 right-2 bottom-2"
-              >
-                <Send className="size-4" />
-              </Button>
             </form>
           </div>
         </div>
