@@ -1,5 +1,4 @@
 import prisma from "@/utils/prisma";
-import { requireUser } from "@/utils/requireUser";
 import { stripe } from "@/utils/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
