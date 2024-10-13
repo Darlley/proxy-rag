@@ -1,10 +1,18 @@
 import prisma from "@/utils/prisma";
 import { requireUser } from "@/utils/requireUser";
 import { stripe } from "@/utils/stripe";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+const KINDE_SITE_URL = process.env.KINDE_SITE_URL!;
+
 export async function POST(request: NextRequest) {
-  const user = await requireUser(); // Requer o usuário autenticado
+  const { getUser } = getKindeServerSession(); // Substitua pela forma correta de obter o usuário
+  const user = await getUser();
+
+  if(!user){
+    return NextResponse.redirect(KINDE_SITE_URL + '/api/auth/login');
+  }
 
   const userId = request.headers.get('x-user-id'); // Obtém o userId do corpo da requisição
 
