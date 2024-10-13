@@ -37,7 +37,7 @@ export default function ChatWrapper({
     });
 
   return (
-    <div className="relative flex flex-col h-svh overflow-hidden">
+    <div className="relative flex flex-col h-svh overflow-hidden bg-gray-950">
       <div className="flex flex-col-reverse gap-4 w-full justify-between max-w-4xl mx-auto py-4 px-4 sm:px-6">
         <ButtonGroup>
           <Button
@@ -63,7 +63,7 @@ export default function ChatWrapper({
         <DropdownProfile />
       </div>
 
-      <div className="flex-grow max-h-full h-full overflow-y-auto bg-gray-950 px-4 sm:px-6">
+      <div className="flex-grow max-h-full h-full overflow-y-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           {!!messages.length ? (
             messages?.map((currentMessage, index) => (
@@ -127,11 +127,10 @@ export default function ChatWrapper({
         </div>
       </div>
 
-      <div className="bg-gray-950 border-t border-gray-900 w-full py-3 md:py-4 px-4 sm:px-6">
+      <div className="border-t border-gray-900 w-full py-3 md:py-4 px-4 sm:px-6">
         <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
           <Textarea
-            minRows={1}
-            maxRows={4}
+            minRows={4}
             autoFocus
             onChange={handleInputChange}
             value={input}
@@ -148,13 +147,10 @@ export default function ChatWrapper({
                 type="submit"
                 color="primary"
                 isIconOnly
-                size="sm"
-                className="md:size-auto"
               >
-                <Send className="size-3 md:size-4" />
+                <Send className="size-4" />
               </Button>
             }
-            className="resize-none bg-zinc-800 hover:bg-zinc-900 rounded-xl text-sm md:text-base"
           />
         </form>
       </div>
