@@ -9,7 +9,8 @@
     "lint": "next lint",
     "plop": "plop --plopfile generators/plopfile.js",
     "db:push": "pnpx prisma db push",
-    "studio": "pnpx prisma studio"
+    "studio": "pnpx prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.3.11",
