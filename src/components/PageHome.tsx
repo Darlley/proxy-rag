@@ -29,6 +29,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  Spinner,
 } from '@nextui-org/react';
 import { AnimationProps, motion } from 'framer-motion';
 import DropdownProfile from './DropdownProfile';
@@ -78,11 +79,22 @@ export default function PageHome({ subscription }: { subscription?: string | nul
   const router = useRouter();
   const [userUrl, setUserUrl] = useState('');
   const [frequency, setFrequency] = useState(frequencies[0]);
+  const [isLoading, setIsLoading] = useState(false);
   
 
-  const handleInitiate = () => {
+  const handleInitiate = async () => {
     if (userUrl) {
-      router.push(`${APP_URL}${userUrl}`);
+      setIsLoading(true);
+      try {
+        // Simule uma operação assíncrona
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        router.push(`${APP_URL}${userUrl}`);
+      } catch (error) {
+        console.error('Erro ao iniciar:', error);
+        // Trate o erro conforme necessário
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -317,11 +329,18 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onPress={onClose} disabled={isLoading}>
                   Fechar
                 </Button>
-                <Button color="primary" onPress={handleInitiate}>
-                  Iniciar
+                <Button color="primary" onPress={handleInitiate} disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Spinner size="sm" color="white" />
+                      <span className="ml-2">Iniciando...</span>
+                    </>
+                  ) : (
+                    'Iniciar'
+                  )}
                 </Button>
               </ModalFooter>
             </>
