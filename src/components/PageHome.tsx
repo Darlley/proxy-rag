@@ -26,6 +26,7 @@ import { AnimationProps, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import DropdownProfile from './DropdownProfile';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL;
@@ -45,6 +46,12 @@ export default function PageHome() {
   return (
     <>
       <main className="relative overflow-hidden bg-gray-950 text-gray-200 w-full min-h-svh">
+        {isAuthenticated && (
+          <div className="flex justify-end w-full fixed top-4 right-4 z-20 ">
+            <DropdownProfile />
+          </div>
+        )}
+
         <div className="mx-auto max-w-7xl p-4 md:p-8 flex flex-col items-center justify-between min-h-svh">
           <header className="relative z-20 text-center w-full max-w-3xl">
             <span className="mb-4 block w-fit rounded bg-gradient-to-br from-slate-800 to-gray-950 p-2 text-xl md:text-3xl shadow-md shadow-indigo-900 mx-auto">
@@ -282,7 +289,7 @@ export default function PageHome() {
         <ModalContent>
           {(onClose) => (
             <>
-            <ModalHeader>Inserir URL</ModalHeader>
+              <ModalHeader>Inserir URL</ModalHeader>
               <ModalBody>
                 <Input
                   type="text"
