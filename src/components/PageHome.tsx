@@ -73,7 +73,6 @@ const plans = [
 ];
 
 export default function PageHome({ subscription }: { subscription?: string | null }) {
-  console.log(subscription)
   const { isAuthenticated, user } = useKindeBrowserClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
