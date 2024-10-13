@@ -6,10 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "plop": "plop --plopfile generators/plopfile.js",
+    "db:push": "pnpx prisma db push",
+    "studio": "pnpx prisma studio"
   },
   "dependencies": {
+    "@kinde-oss/kinde-auth-nextjs": "^2.3.11",
     "@nextui-org/react": "^2.4.6",
+    "@prisma/client": "^5.20.0",
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
@@ -20,9 +25,14 @@
     "framer-motion": "^11.3.31",
     "lucide-react": "^0.438.0",
     "next": "14.2.7",
+    "next-themes": "^0.3.0",
+    "plop": "^4.0.1",
+    "pluralize": "^8.0.0",
     "prism-react-renderer": "^2.4.0",
+    "prisma": "^5.20.0",
     "react": "^18",
     "react-dom": "^18",
+    "stripe": "^17.2.0",
     "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {

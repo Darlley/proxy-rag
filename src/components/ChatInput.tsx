@@ -23,30 +23,28 @@ export const ChatInput = ({
 }: ChatInputProps) => {
   return (
     <div className="bg-gray-950 border-t border-gray-900 w-full">
-      <form onSubmit={handleSubmit} className="mx-auto container p-4">
-              <Textarea
-                minRows={4}
-                autoFocus
-                onChange={handleInputChange}
-                value={input}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit();
-                    setInput('');
-                  }
-                }}
-                placeholder="Faça sua pergunta..."
-                endContent={<Button
-                  type="submit"
-                  color="primary"
-                  isIconOnly
-                >
-                  <Send className="size-4" />
-                </Button>}
-                className="resize-none bg-zinc-800 hover:bg-zinc-900 rounded-xl text-base"
-              />
-            </form>
+      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl p-4">
+        <Textarea
+          minRows={4}
+          autoFocus
+          onChange={handleInputChange}
+          value={input}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+              setInput('');
+            }
+          }}
+          placeholder="Faça sua pergunta..."
+          endContent={
+            <Button type="submit" color="primary" isIconOnly>
+              <Send className="size-4" />
+            </Button>
+          }
+          className="resize-none bg-zinc-800 hover:bg-zinc-900 rounded-xl text-base"
+        />
+      </form>
     </div>
   );
 };
