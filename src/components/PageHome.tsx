@@ -118,11 +118,9 @@ export default function PageHome({ subscription }: { subscription?: string | nul
               MY-PROXY-RAG
             </h1>
             <p className="mb-6 leading-snug text-slate-400 lg:leading-snug">
-              O MY-PROXY-RAG permite interagir com os artigos que escrevi na
-              plataforma TabNews 🎊 Basta adicionar{' '}
-              <code className="font-mono text-blue-500">{APP_URL}</code> na
-              frente de qualquer URL de algum artigo em{' '}
-              <code className="font-mono text-blue-500">{KNOWLEDGE_URL}</code>.
+              O MY-PROXY-RAG permite interagir com qualquer conteúdo público na web 🌐 
+              Basta adicionar <code className="font-mono text-blue-500">{APP_URL}</code> na
+              frente de qualquer URL pública que você deseja consultar. Ou simplesmente clique em começar ⚡
             </p>
           </header>
 
