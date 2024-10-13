@@ -1,19 +1,27 @@
 'use client';
 
-import { Compare } from '@/components/Compare';
-import { Brain, CheckCircle } from 'lucide-react';
-
-import {
-  LoginLink,
-  RegisterLink,
-} from '@kinde-oss/kinde-auth-nextjs/components';
-
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import {
   Button,
   Card,
   CardBody,
   CardHeader,
+  Chip,
+  Radio,
+  RadioGroup,
+} from '@nextui-org/react';
+import { Brain, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { Compare } from '@/components/Compare';
+import {
+  LoginLink,
+  RegisterLink,
+} from '@kinde-oss/kinde-auth-nextjs/components';
+
+import {
   Input,
   Modal,
   ModalBody,
@@ -23,25 +31,62 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { AnimationProps, motion } from 'framer-motion';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import DropdownProfile from './DropdownProfile';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL;
 
-export default function PageHome() {
-  const { isAuthenticated } = useKindeBrowserClient();
+const frequencies = [
+  { value: 'monthly', label: 'Mensal', priceSuffix: '/mês' },
+  { value: 'annually', label: 'Anual', priceSuffix: '/ano' },
+];
+
+const plans = [
+  {
+    id: 'free',
+    name: 'Gratuito',
+    description: 'Comece a explorar.',
+    price: { monthly: 'R$ 0', annually: 'R$ 0' },
+    features: ['20 consultas por dia'],
+    buttonText: 'Começar Grátis',
+    mostPopular: false,
+  },
+  {
+    id: 'basic',
+    name: 'Básico',
+    description: 'Para uso moderado e regular',
+    price: { monthly: 'R$ 14,90', annually: 'R$ 149,00' },
+    features: ['500 Consultas por mês'],
+    buttonText: 'Escolher Básico',
+    mostPopular: true,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    description: 'Para uso intensivo e profissional.',
+    price: { monthly: 'R$ 79,90', annually: 'R$ 799,00' },
+    features: ['2000 consultas por dia'],
+    buttonText: 'Escolher Pro',
+    mostPopular: false,
+  },
+];
+
+export default function PageHome({ subscription }: { subscription?: string | null }) {
+  console.log(subscription)
+  const { isAuthenticated, user } = useKindeBrowserClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   const [userUrl, setUserUrl] = useState('');
+  const [frequency, setFrequency] = useState(frequencies[0]);
+  
 
   const handleInitiate = () => {
     if (userUrl) {
       router.push(`${APP_URL}${userUrl}`);
     }
   };
+
+  
 
   return (
     <>
@@ -122,113 +167,85 @@ export default function PageHome() {
                 </h2>
               </div>
 
-              <div className="mt-10 flex justify-center">
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
-                  <Card className="dark:bg-gray-900 border-2 dark:border-gray-800 p-4 w-full">
-                    <CardHeader className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-200">
-                        Gratuito
-                      </h3>
-                    </CardHeader>
-                    <CardBody>
-                      <p className="text-sm text-gray-400">
-                        Perfeito para começar a explorar.
-                      </p>
-                      <p className="mt-6 flex items-baseline gap-x-1">
-                        <span className="text-4xl font-bold text-gray-200">
-                          R$ 0
-                        </span>
-                        <span className="text-sm font-semibold text-gray-400">
-                          /mês
-                        </span>
-                      </p>
-                      <ul className="my-8 space-y-3 text-sm text-gray-400">
-                        <li className="flex items-center gap-x-3">
-                          <CheckCircle className="h-5 w-5 flex-shrink-0 text-primary" />
-                          20 consultas por dia
-                        </li>
-                      </ul>
-                      <Button
-                        color="primary"
-                        variant="bordered"
-                        className="w-full mt-auto"
-                      >
-                        Começar Grátis
-                      </Button>
-                    </CardBody>
-                  </Card>
+              <div className="mt-16 flex justify-center">
+                <RadioGroup
+                  label="Frequência de pagamento"
+                  orientation="horizontal"
+                  value={frequency.value}
+                  onValueChange={(value) =>
+                    setFrequency(
+                      frequencies.find((f) => f.value === value) ||
+                        frequencies[0]
+                    )
+                  }
+                >
+                  {frequencies.map((option) => (
+                    <Radio key={option.value} value={option.value}>
+                      {option.label}
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              </div>
 
-                  <Card className="dark:bg-gray-900 border-2 border-primary p-4 w-full">
+              <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
+                {plans.map((plan) => (
+                  <Card
+                    key={plan.id}
+                    className={`dark:bg-gray-900 border-2 ${
+                      subscription && 
+                      ((subscription === process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID && plan.id === 'free') ||
+                       (subscription === process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID && plan.id === 'basic') ||
+                       (subscription === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID && plan.id === 'pro'))
+                        ? 'border-primary'
+                        : 'dark:border-gray-800'
+                    } p-4 w-full`}
+                  >
                     <CardHeader className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-primary">
-                        Basico
+                      <h3
+                        className={`text-lg font-semibold ${
+                          plan.mostPopular ? 'text-primary' : 'text-gray-200'
+                        }`}
+                      >
+                        {plan.name}
                       </h3>
-                      <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                        Mais popular
-                      </span>
+                      {plan.mostPopular && (
+                        <Chip
+                          color="primary"
+                          variant="shadow"
+                          size="sm"
+                          className="text-xs font-semibold"
+                        >
+                          Mais popular
+                        </Chip>
+                      )}
                     </CardHeader>
                     <CardBody>
                       <p className="text-sm text-gray-400">
-                        Para uso moderado e regular
+                        {plan.description}
                       </p>
                       <p className="mt-6 flex items-baseline gap-x-1">
                         <span className="text-4xl font-bold text-gray-200">
-                          R$ 14,90
+                          {
+                            plan.price[
+                              frequency.value as keyof typeof plan.price
+                            ]
+                          }
                         </span>
                         <span className="text-sm font-semibold text-gray-400">
-                          /mês
+                          {frequency.priceSuffix}
                         </span>
                       </p>
                       <ul className="my-8 space-y-3 text-sm text-gray-400">
-                        <li className="flex items-center gap-x-3">
-                          <CheckCircle className="h-5 w-5 flex-shrink-0 text-primary" />
-                          500 Consultas por mes
-                        </li>
+                        {plan.features.map((feature, index) => (
+                          <li key={index} className="flex items-center gap-x-3">
+                            <CheckCircle className="h-5 w-5 flex-shrink-0 text-primary" />
+                            {feature}
+                          </li>
+                        ))}
                       </ul>
-                      <Button
-                        color="primary"
-                        variant="shadow"
-                        className="w-full mt-auto"
-                      >
-                        Escolher Pro
-                      </Button>
                     </CardBody>
                   </Card>
-
-                  <Card className="dark:bg-gray-900 border-2 dark:border-gray-800 p-4 w-full">
-                    <CardHeader className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-200">
-                        Pro
-                      </h3>
-                    </CardHeader>
-                    <CardBody>
-                      <p className="text-sm text-gray-400">
-                        Para uso intensivo e profissional.
-                      </p>
-                      <p className="mt-6 flex items-baseline gap-x-1">
-                        <span className="text-4xl font-bold text-gray-200">
-                          R$ 79,90
-                        </span>
-                        <span className="text-sm font-semibold text-gray-400">
-                          /mês
-                        </span>
-                      </p>
-                      <ul className="my-8 space-y-3 text-sm text-gray-400">
-                        <li className="flex items-center gap-x-3">
-                          <CheckCircle className="h-5 w-5 flex-shrink-0 text-primary" />
-                          2000 consultas por dia
-                        </li>
-                      </ul>
-                      <Button
-                        color="primary"
-                        variant="bordered"
-                        className="w-full mt-auto"
-                      >
-                        Escolher Avançado
-                      </Button>
-                    </CardBody>
-                  </Card>
-                </div>
+                ))}
               </div>
             </div>
           </section>

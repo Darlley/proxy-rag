@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: userExists?.stripeCustomerId as string,
-      return_url: 'http://localhost:3000/dashboard/pricing',
+      return_url: 'http://localhost:3000/',
     });
 
     // Retorna a URL da sessão criada

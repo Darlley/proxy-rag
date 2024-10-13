@@ -13,44 +13,60 @@ import {
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { DropdownProfileProps } from './DropdownProfile.types';
+import { useState } from 'react';
 export default function DropdownProfile(props: DropdownProfileProps) {
   const { user } = useKindeBrowserClient();
-  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleOpenPortal = async () => {
+    try {
+      const response = await fetch('/api/portal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': user?.id || '',
+        },
+      });
+
+      if (response.ok) {
+        const { url } = await response.json();
+        window.location.href = url;
+      } else {
+        console.error(
+          'Erro ao processar o redirecionamento para o portal de cobrança'
+        );
+      }
+    } catch (error) {
+      console.error('Erro ao fazer a requisição:', error);
+    }
+  };
+
   return (
-    <Dropdown placement="bottom-end">
+    <Dropdown placement="bottom-end" >
       <DropdownTrigger>
         <User
           as="button"
           avatarProps={{
             isBordered: true,
-            src: 'https://github.com/darlley.png',
+            src: user?.picture || '',
           }}
           className="transition-transform"
-          description="@darlleybbf"
-          name="Darlley Brito"
+          description={user?.email}
+          name={user?.given_name + ' ' + user?.family_name}
         />
       </DropdownTrigger>
       <DropdownMenu
         aria-label="User Actions"
         variant="flat"
-        onAction={(key) => {
-          if (key === 'site') {
-            router.push('/site');
-          }
-          if (key === 'dashboard') {
-            router.push('/dashboard');
+        onAction={key => {
+          if(key === 'payment'){
+            handleOpenPortal()
           }
         }}
       >
-        <DropdownItem key="profile" className="h-14 gap-2">
-          <p className="font-bold">Conectado como</p>
-          <p className="font-bold">{user?.email}</p>
-        </DropdownItem>
-        <DropdownItem key="dashboard">
-          Dashboard
-        </DropdownItem>
-        <DropdownItem key="site">
-          Site
+        <DropdownItem key="payment" color="primary">
+          Gerenciar Assinatura
         </DropdownItem>
         <DropdownItem key="logout" color="danger">
           <LogoutLink className="w-full flex">Sair</LogoutLink>

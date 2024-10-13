@@ -48,6 +48,7 @@ export async function GET() {
       data: {
         stripeCustomerId: customer.id,
         stripeSubscriptionId: subscription.id,
+        stripeSubscriptionStatus: 'active'
       },
     });
   } else {
