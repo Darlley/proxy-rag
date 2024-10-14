@@ -1,26 +1,40 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
+import { PrismaNeon } from '@prisma/adapter-neon';
+import { Pool } from '@neondatabase/serverless';
 
-import dotenv from 'dotenv';
-import ws from 'ws';
+const connectionString = process.env.DATABASE_URL;
 
-dotenv.config();
-neonConfig.webSocketConstructor = ws;
-const connectionString = `${process.env.DATABASE_URL}`;
-
-const prismaClientSingleton = () => {
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaNeon(pool);
-  return new PrismaClient({ adapter });
-};
-
-declare global {
-  var prismaGlobal: ReturnType<typeof prismaClientSingleton> | undefined;
+if (!connectionString) {
+  throw new Error('DATABASE_URL não está definida');
 }
 
-const prisma = global.prismaGlobal ?? prismaClientSingleton();
+const pool = new Pool({ connectionString });
+const adapter = new PrismaNeon(pool);
+
+const prismaClientSingleton = () => {
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: 'prisma://neon'
+      }
+    }
+  }).$extends({
+    query: {
+      $allOperations({ operation, args, query }) {
+        return adapter.queryRaw(args);
+      },
+    },
+  });
+};
+
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientSingleton | undefined;
+};
+
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export default prisma;
-
-if (process.env.NODE_ENV !== 'production') global.prismaGlobal = prisma;
