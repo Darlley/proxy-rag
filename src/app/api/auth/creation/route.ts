@@ -1,5 +1,5 @@
-import prisma from '@/utils/prisma';
-import { stripe } from '@/utils/stripe';
+import prisma from '@/lib/prisma';
+import { stripe } from '@/lib/stripe';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextResponse } from 'next/server';
 

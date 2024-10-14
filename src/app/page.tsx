@@ -1,5 +1,5 @@
 import PageHome from "@/components/PageHome";
-import prisma from "@/utils/prisma";
+import prisma from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 async function getSubscriptionId(userId: string | undefined): Promise<string | null> {

@@ -37,17 +37,13 @@ import DropdownProfile from './DropdownProfile';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL;
 
-const frequencies = [
-  { value: 'monthly', label: 'Mensal', priceSuffix: '/mês' },
-  { value: 'annually', label: 'Anual', priceSuffix: '/ano' },
-];
 
 const plans = [
   {
     id: 'free',
     name: 'Gratuito',
     description: 'Comece a explorar.',
-    price: { monthly: 'R$ 0', annually: 'R$ 0' },
+    price: { monthly: 'R$ 0'},
     features: ['20 consultas por dia'],
     buttonText: 'Começar Grátis',
     mostPopular: false,
@@ -56,7 +52,7 @@ const plans = [
     id: 'basic',
     name: 'Básico',
     description: 'Para uso moderado e regular',
-    price: { monthly: 'R$ 14,90', annually: 'R$ 149,00' },
+    price: { monthly: 'R$ 14,90' },
     features: ['500 Consultas por mês'],
     buttonText: 'Escolher Básico',
     mostPopular: true,
@@ -65,7 +61,7 @@ const plans = [
     id: 'pro',
     name: 'Pro',
     description: 'Para uso intensivo e profissional.',
-    price: { monthly: 'R$ 79,90', annually: 'R$ 799,00' },
+    price: { monthly: 'R$ 79,90' },
     features: ['2000 consultas por dia'],
     buttonText: 'Escolher Pro',
     mostPopular: false,
@@ -77,7 +73,6 @@ export default function PageHome({ subscription }: { subscription?: string | nul
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   const [userUrl, setUserUrl] = useState('');
-  const [frequency, setFrequency] = useState(frequencies[0]);
   const [isLoading, setIsLoading] = useState(false);
   
 
@@ -114,7 +109,7 @@ export default function PageHome({ subscription }: { subscription?: string | nul
               <Brain />
             </span>
             <h1 className="mb-4 text-2xl font-semibold leading-tight">
-              MY-PROXY-RAG
+              MY PROXY RAG
             </h1>
             <p className="mb-6 leading-snug text-slate-400 lg:leading-snug">
               O MY-PROXY-RAG permite interagir com qualquer conteúdo público na web 🌐 
@@ -176,26 +171,6 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                 </h2>
               </div>
 
-              <div className="mt-16 flex justify-center">
-                <RadioGroup
-                  label="Frequência de pagamento"
-                  orientation="horizontal"
-                  value={frequency.value}
-                  onValueChange={(value) =>
-                    setFrequency(
-                      frequencies.find((f) => f.value === value) ||
-                        frequencies[0]
-                    )
-                  }
-                >
-                  {frequencies.map((option) => (
-                    <Radio key={option.value} value={option.value}>
-                      {option.label}
-                    </Radio>
-                  ))}
-                </RadioGroup>
-              </div>
-
               <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
                 {plans.map((plan) => (
                   <Card
@@ -235,13 +210,8 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                       <p className="mt-6 flex items-baseline gap-x-1">
                         <span className="text-4xl font-bold text-gray-200">
                           {
-                            plan.price[
-                              frequency.value as keyof typeof plan.price
-                            ]
+                            plan.price.monthly
                           }
-                        </span>
-                        <span className="text-sm font-semibold text-gray-400">
-                          {frequency.priceSuffix}
                         </span>
                       </p>
                       <ul className="my-8 space-y-3 text-sm text-gray-400">
