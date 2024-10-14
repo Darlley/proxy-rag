@@ -4,11 +4,6 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  // Verificar se estamos em ambiente de produção
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json({ message: 'Esta rota só está disponível em tempo de execução.' });
-  }
-
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   if (!user || user === null || !user?.id) {
