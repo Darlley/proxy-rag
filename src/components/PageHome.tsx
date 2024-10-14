@@ -1,15 +1,7 @@
 'use client';
 
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  Radio,
-  RadioGroup,
-} from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Chip } from '@nextui-org/react';
 import { Brain, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -28,22 +20,20 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
   Spinner,
+  useDisclosure,
 } from '@nextui-org/react';
 import { AnimationProps, motion } from 'framer-motion';
 import DropdownProfile from './DropdownProfile';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-const KNOWLEDGE_URL = process.env.NEXT_PUBLIC_KNOWLEDGE_URL;
-
 
 const plans = [
   {
     id: 'free',
     name: 'Gratuito',
     description: 'Comece a explorar.',
-    price: { monthly: 'R$ 0'},
+    price: { monthly: 'R$ 0' },
     features: ['20 consultas por dia'],
     buttonText: 'Começar Grátis',
     mostPopular: false,
@@ -68,20 +58,23 @@ const plans = [
   },
 ];
 
-export default function PageHome({ subscription }: { subscription?: string | null }) {
+export default function PageHome({
+  subscription,
+}: {
+  subscription?: string | null;
+}) {
   const { isAuthenticated, user } = useKindeBrowserClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   const [userUrl, setUserUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
 
   const handleInitiate = async () => {
     if (userUrl) {
       setIsLoading(true);
       try {
         // Simule uma operação assíncrona
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         router.push(`${APP_URL}${userUrl}`);
       } catch (error) {
         console.error('Erro ao iniciar:', error);
@@ -91,8 +84,6 @@ export default function PageHome({ subscription }: { subscription?: string | nul
       }
     }
   };
-
-  
 
   return (
     <>
@@ -112,9 +103,11 @@ export default function PageHome({ subscription }: { subscription?: string | nul
               MY PROXY RAG
             </h1>
             <p className="mb-6 leading-snug text-slate-400 lg:leading-snug">
-              O MY-PROXY-RAG permite interagir com qualquer conteúdo público na web 🌐 
-              Basta adicionar <code className="font-mono text-blue-500">{APP_URL}</code> na
-              frente de qualquer URL pública que você deseja consultar. Ou simplesmente clique em começar ⚡
+              O MY-PROXY-RAG permite interagir com qualquer conteúdo público na
+              web 🌐 Basta adicionar{' '}
+              <code className="font-mono text-blue-500">{APP_URL}</code> na
+              frente de qualquer URL pública que você deseja consultar. Ou
+              simplesmente clique em começar ⚡
             </p>
           </header>
 
@@ -176,10 +169,16 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                   <Card
                     key={plan.id}
                     className={`dark:bg-gray-900 border-2 ${
-                      subscription && 
-                      ((subscription === process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID && plan.id === 'free') ||
-                       (subscription === process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID && plan.id === 'basic') ||
-                       (subscription === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID && plan.id === 'pro'))
+                      subscription &&
+                      ((subscription ===
+                        process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID &&
+                        plan.id === 'free') ||
+                        (subscription ===
+                          process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID &&
+                          plan.id === 'basic') ||
+                        (subscription ===
+                          process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID &&
+                          plan.id === 'pro'))
                         ? 'border-primary'
                         : 'dark:border-gray-800'
                     } p-4 w-full`}
@@ -209,9 +208,7 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                       </p>
                       <p className="mt-6 flex items-baseline gap-x-1">
                         <span className="text-4xl font-bold text-gray-200">
-                          {
-                            plan.price.monthly
-                          }
+                          {plan.price.monthly}
                         </span>
                       </p>
                       <ul className="my-8 space-y-3 text-sm text-gray-400">
@@ -296,10 +293,19 @@ export default function PageHome({ subscription }: { subscription?: string | nul
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose} disabled={isLoading}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isLoading}
+                >
                   Fechar
                 </Button>
-                <Button color="primary" onPress={handleInitiate} disabled={isLoading}>
+                <Button
+                  color="primary"
+                  onPress={handleInitiate}
+                  disabled={isLoading}
+                >
                   {isLoading ? (
                     <>
                       <Spinner size="sm" color="white" />
