@@ -53,6 +53,7 @@ export async function GET() {
           stripeCustomerId: customer.id,
           stripeSubscriptionId: subscription.id,
           stripeSubscriptionStatus: 'active',
+          stripePriceId: process.env.STRIPE_FREE_PRICE_ID,
         },
       });
     } else {

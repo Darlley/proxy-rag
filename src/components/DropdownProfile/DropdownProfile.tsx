@@ -16,6 +16,7 @@ import { DropdownProfileProps } from './DropdownProfile.types';
 import { useState } from 'react';
 export default function DropdownProfile(props: DropdownProfileProps) {
   const { user } = useKindeBrowserClient();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,10 +64,16 @@ export default function DropdownProfile(props: DropdownProfileProps) {
           if(key === 'payment'){
             handleOpenPortal()
           }
+          if(key === 'conversations'){
+            router.push('/conversations')
+          }
         }}
       >
-        <DropdownItem key="payment" color="primary">
+        <DropdownItem key="payment">
           Gerenciar Assinatura
+        </DropdownItem>
+        <DropdownItem key="conversations">
+          Conversas
         </DropdownItem>
         <DropdownItem key="logout" color="danger">
           <LogoutLink className="w-full flex">Sair</LogoutLink>

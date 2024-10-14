@@ -21,6 +21,7 @@ model Conversation {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   url       String
+  title     String?
 
   user User @relation(fields: [userId], references: [id])
 
@@ -52,7 +53,9 @@ model Message {
   content        String
   role           String
   conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
-  
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  updatedAt      DateTime     @updatedAt
+
+  @@index([conversationId])
 }
