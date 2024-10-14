@@ -71,7 +71,7 @@ export async function GET() {
       }
     }
 
-    return NextResponse.redirect(`${process.env.KINDE_SITE_URL!}/dashboard`);
+    return NextResponse.redirect(process.env.KINDE_SITE_URL!);
   } catch (error) {
     console.error('Erro na rota de criação de auth:', error);
     return NextResponse.json(

@@ -6,6 +6,8 @@ import { Message, useChat } from 'ai/react';
 import { BookOpen, Bot, Home, MessageSquare, Send, User } from 'lucide-react';
 import Link from 'next/link';
 import DropdownProfile from './DropdownProfile';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type HandleInputChange = ReturnType<typeof useChat>['handleInputChange'];
 type HandleSubmit = ReturnType<typeof useChat>['handleSubmit'];
@@ -19,22 +21,61 @@ interface ChatInputProps {
 }
 
 interface ChatProps {
-  sessionId: string;
+  userId: string;
   initialMessages: Message[];
   reconstructedUrl: string;
+  requestsUsed: number;
+  requestsLimit: number;
 }
 
 export default function ChatWrapper({
-  sessionId,
+  userId,
   initialMessages,
   reconstructedUrl,
+  requestsUsed,
+  requestsLimit,
 }: ChatProps) {
-  const { messages, handleInputChange, input, handleSubmit, setInput } =
+  const [messages, setMessages] = useState(initialMessages);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const { handleInputChange, input, handleSubmit, setInput } =
     useChat({
       api: '/api/chat-stream',
-      body: { sessionId },
+      body: { userId },
       initialMessages,
     });
+
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (requestsUsed >= requestsLimit) {
+      setError('Você atingiu o limite de solicitações para o seu plano');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await handleSubmit(e);
+
+      // Atualizar o contador de solicitações no banco de dados
+      await fetch('/api/update-requests-count', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ increment: 1 }),
+      });
+
+      router.refresh(); // Atualiza os dados da página
+    } catch (err) {
+      setError('Ocorreu um erro ao enviar a mensagem');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative flex flex-col h-svh overflow-hidden bg-gray-950">
@@ -128,7 +169,7 @@ export default function ChatWrapper({
       </div>
 
       <div className="border-t border-gray-900 w-full py-3 md:py-4 px-4 sm:px-6">
-        <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+        <form onSubmit={handleSendMessage} className="mx-auto w-full max-w-4xl">
           <Textarea
             minRows={4}
             autoFocus
@@ -137,7 +178,7 @@ export default function ChatWrapper({
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleSubmit();
+                handleSendMessage(e as any);
                 setInput('');
               }
             }}
@@ -147,10 +188,13 @@ export default function ChatWrapper({
                 type="submit"
                 color="primary"
                 isIconOnly
+                disabled={isLoading}
               >
                 <Send className="size-4" />
               </Button>
             }
+            errorMessage={error}
+            isDisabled={isLoading || !!error}
           />
         </form>
       </div>
