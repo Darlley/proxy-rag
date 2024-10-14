@@ -5,6 +5,8 @@ import { ragChat } from '@/lib/rag-chat';
 import { redis } from '@/lib/redis';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
+import { Message as AIMessage } from 'ai';
+import { Message as PrismaMessage } from '@prisma/client';
 
 interface PageProps {
   params: {
@@ -31,13 +33,37 @@ const getPlanFromStripeId = (stripePriceId: string | null): string => {
   }
 };
 
+function convertPrismaMessageToAiMessage(message: PrismaMessage): AIMessage {
+  return {
+    id: message.id,
+    content: message.content,
+    role: message.role as AIMessage['role'],
+    createdAt: message.createdAt,
+  };
+}
+
+async function getOrCreateConversation(userId: string, url: string) {
+  let conversation = await prisma.conversation.findFirst({
+    where: { userId, url },
+    orderBy: { updatedAt: 'desc' },
+    include: { messages: true },
+  });
+
+  if (!conversation) {
+    conversation = await prisma.conversation.create({
+      data: { userId, url },
+      include: { messages: true },
+    });
+  }
+
+  const messages: AIMessage[] = conversation.messages.map(convertPrismaMessageToAiMessage);
+
+  return { ...conversation, messages };
+}
+
 export default async function page({ params }: PageProps) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-
-  if (!user) {
-    redirect('/api/auth/login');
-  }
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
@@ -55,17 +81,14 @@ export default async function page({ params }: PageProps) {
   const requestsLimit = planLimits[userPlan];
 
   const reconstructedUrl = reconstructUrl({ url: params.url as string[] });
-  const isAlreadyIndexed = await redis.sismember(
-    'indexed-urls',
-    reconstructedUrl
-  );
+  const conversation = await getOrCreateConversation(user.id, reconstructedUrl);
 
-  const initialMessages = await ragChat.history.getMessages({
-    amount: 10,
-    sessionId: user.id, // Usando o ID do usuário como sessionId
-  });
+  const initialMessages = conversation.messages;
 
-  if (!isAlreadyIndexed) {
+  // Verificar se a URL já foi indexada no Redis
+  const isIndexed = await redis.sismember('indexed-urls', reconstructedUrl);
+
+  if (!isIndexed) {
     await ragChat.context.add({
       type: 'html',
       source: reconstructedUrl,
@@ -84,6 +107,7 @@ export default async function page({ params }: PageProps) {
       reconstructedUrl={reconstructedUrl}
       requestsUsed={dbUser.requests}
       requestsLimit={requestsLimit}
+      conversationId={conversation.id}
     />
   );
 }

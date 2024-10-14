@@ -26,6 +26,7 @@ interface ChatProps {
   reconstructedUrl: string;
   requestsUsed: number;
   requestsLimit: number;
+  conversationId: string;
 }
 
 export default function ChatWrapper({
