@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { stripe } from '@/lib/stripe';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextResponse } from 'next/server';
@@ -7,7 +7,10 @@ export async function GET() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   if (!user || user === null || !user?.id) {
-    return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
+    return NextResponse.json(
+      { error: 'Usuário não autenticado' },
+      { status: 401 }
+    );
   }
 
   let dbUser = await prisma.user.findUnique({
@@ -47,7 +50,7 @@ export async function GET() {
       data: {
         stripeCustomerId: customer.id,
         stripeSubscriptionId: subscription.id,
-        stripeSubscriptionStatus: 'active'
+        stripeSubscriptionStatus: 'active',
       },
     });
   } else {

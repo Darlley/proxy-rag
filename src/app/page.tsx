@@ -1,15 +1,17 @@
-import PageHome from "@/components/PageHome";
-import prisma from "@/lib/prisma";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import PageHome from '@/components/PageHome';
+import { prisma } from '@/lib/prisma';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-async function getSubscriptionId(userId: string | undefined): Promise<string | null> {
+async function getSubscriptionId(
+  userId: string | undefined
+): Promise<string | null> {
   if (!userId) return null;
-  
+
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { stripeSubscriptionId: true },
   });
-  
+
   return user?.stripeSubscriptionId ?? null;
 }
 
