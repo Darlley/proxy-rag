@@ -35,12 +35,11 @@ export default function ChatWrapper({
   requestsUsed,
   requestsLimit,
 }: ChatProps) {
-  const [messages, setMessages] = useState(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const { handleInputChange, input, handleSubmit, setInput } =
+  const { messages, handleInputChange, input, handleSubmit, setInput } =
     useChat({
       api: '/api/chat-stream',
       body: { userId },
@@ -61,7 +60,7 @@ export default function ChatWrapper({
       await handleSubmit(e);
 
       // Atualizar o contador de solicitações no banco de dados
-      await fetch('/api/update-requests-count', {
+      const response = await fetch('/api/update-requests-count', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,9 +68,14 @@ export default function ChatWrapper({
         body: JSON.stringify({ increment: 1 }),
       });
 
+      if (!response.ok) {
+        throw new Error('Falha ao atualizar contagem de solicitações');
+      }
+
       router.refresh(); // Atualiza os dados da página
     } catch (err) {
       setError('Ocorreu um erro ao enviar a mensagem');
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -106,8 +110,8 @@ export default function ChatWrapper({
 
       <div className="flex-grow max-h-full h-full overflow-y-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
-          {!!messages.length ? (
-            messages?.map((currentMessage, index) => (
+          {messages.length > 0 ? (
+            messages.map((currentMessage, index) => (
               <div
                 key={index}
                 className={cn({

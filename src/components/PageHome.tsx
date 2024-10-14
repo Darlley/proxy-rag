@@ -13,6 +13,7 @@ import {
   RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 
+import { plans } from '@/constants/plans';
 import {
   Input,
   Modal,
@@ -27,36 +28,6 @@ import { AnimationProps, motion } from 'framer-motion';
 import DropdownProfile from './DropdownProfile';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-
-const plans = [
-  {
-    id: 'free',
-    name: 'Gratuito',
-    description: 'Comece a explorar.',
-    price: { monthly: 'R$ 0' },
-    features: ['20 consultas por dia'],
-    buttonText: 'Começar Grátis',
-    mostPopular: false,
-  },
-  {
-    id: 'basic',
-    name: 'Básico',
-    description: 'Para uso moderado e regular',
-    price: { monthly: 'R$ 14,90' },
-    features: ['500 Consultas por mês'],
-    buttonText: 'Escolher Básico',
-    mostPopular: true,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    description: 'Para uso intensivo e profissional.',
-    price: { monthly: 'R$ 79,90' },
-    features: ['2000 consultas por dia'],
-    buttonText: 'Escolher Pro',
-    mostPopular: false,
-  },
-];
 
 export default function PageHome({
   subscription,
@@ -215,7 +186,7 @@ export default function PageHome({
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-center gap-x-3">
                             <CheckCircle className="h-5 w-5 flex-shrink-0 text-primary" />
-                            {feature}
+                            {feature.name}
                           </li>
                         ))}
                       </ul>

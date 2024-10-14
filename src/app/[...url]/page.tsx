@@ -1,8 +1,9 @@
 import ChatWrapper from '@/components/ChatWrapper';
+import { plans } from '@/constants/plans';
+import prisma from '@/lib/prisma';
 import { ragChat } from '@/lib/rag-chat';
 import { redis } from '@/lib/redis';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
 interface PageProps {
@@ -17,6 +18,18 @@ function reconstructUrl({ url }: { url: string[] }) {
   );
   return decodedComponents.join('/');
 }
+
+const getPlanFromStripeId = (stripePriceId: string | null): string => {
+  switch (stripePriceId) {
+    case process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID:
+      return 'basic';
+    case process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID:
+      return 'pro';
+    case process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID:
+    default:
+      return 'free';
+  }
+};
 
 export default async function page({ params }: PageProps) {
   const { getUser } = getKindeServerSession();
@@ -34,19 +47,12 @@ export default async function page({ params }: PageProps) {
     throw new Error('Usuário não encontrado');
   }
 
-  const planLimits = {
-    free: { requests: 20 },
-    basic: { requests: 100 },
-    pro: { requests: 1000 },
-  };
+  const planLimits = Object.fromEntries(
+    plans.map((plan) => [plan.id, plan.features[0].limit])
+  );
 
-  const userPlan = dbUser.stripePriceId === process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID
-    ? 'basic'
-    : dbUser.stripePriceId === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID
-      ? 'pro'
-      : 'free';
-
-  const { requests: requestsLimit } = planLimits[userPlan];
+  const userPlan = getPlanFromStripeId(dbUser.stripePriceId);
+  const requestsLimit = planLimits[userPlan];
 
   const reconstructedUrl = reconstructUrl({ url: params.url as string[] });
   const isAlreadyIndexed = await redis.sismember(
