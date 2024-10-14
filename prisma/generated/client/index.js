@@ -149,7 +149,9 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [],
+    "previewFeatures": [
+      "driverAdapters"
+    ],
     "sourceFilePath": "C:\\Users\\darll\\Documents\\sites\\SaaS\\proxy-rag\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
@@ -164,6 +166,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -172,8 +175,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                       String   @id // Este será o kindeId\n  firstName                String?\n  lastName                 String?\n  name                     String\n  email                    String   @unique\n  profileImage             String?\n  stripeCustomerId         String?  @unique\n  stripeSubscriptionId     String?\n  stripeSubscriptionStatus String?\n  stripePriceId            String?\n  createdAt                DateTime @default(now())\n  updatedAt                DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "f086b24418ec7591ba13864a85e17423b32fbff291178c3d15af5656d14aaaee",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  previewFeatures = [\"driverAdapters\"]\n  output          = \"./generated/client\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id                       String   @id // Este será o kindeId\n  firstName                String?\n  lastName                 String?\n  name                     String\n  email                    String   @unique\n  profileImage             String?\n  stripeCustomerId         String?  @unique\n  stripeSubscriptionId     String?\n  stripeSubscriptionStatus String?\n  stripePriceId            String?\n  createdAt                DateTime @default(now())\n  updatedAt                DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "678b70da7e5ad345aa75311d0e9056296a336bf30f2271e89f13260ea1264a27",
   "copyEngine": true
 }
 
