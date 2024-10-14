@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf node_modules/.prisma && prisma generate && next build",
+    "build": "npm run prisma:generate && npm run next:build",
     "start": "next start",
     "lint": "next lint",
     "plop": "plop --plopfile generators/plopfile.js",
     "db:push": "pnpx prisma db push",
     "studio": "pnpx prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "next:build": "next build"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.3.11",
