@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface Conversation {
@@ -97,16 +97,18 @@ export default function ConversationsPage() {
             {conversations.map((conversation) => (
               <TableRow key={conversation.id}>
                 <TableCell>
-                  <Link href={`/conversations/${conversation.id}`}>
+                  <Link href={`/conversations/${conversation.id}`} className='text-sm'>
                     {conversation.title || 'Sem título'}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Button
                     color="danger"
+                    isIconOnly
+                    size="sm"
                     onClick={() => deleteConversation(conversation.id)}
                   >
-                    Excluir
+                    <Trash className="size-4 stroke-[1.5]" />
                   </Button>
                 </TableCell>
               </TableRow>

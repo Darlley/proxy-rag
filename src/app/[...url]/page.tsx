@@ -13,6 +13,54 @@ interface PageProps {
   };
 }
 
+export default async function page({ params }: PageProps) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+  });
+
+  if (!dbUser) {
+    throw new Error('Usuário não encontrado');
+  }
+
+  const reconstructedUrl = reconstructUrl({ url: params.url as string[] });
+
+  // Obter o H1 da página
+  const pageH1 = await getPageH1(reconstructedUrl);
+
+  // Verificar se a URL já foi indexada no Redis
+  const isIndexed = await redis.sismember('indexed-urls', reconstructedUrl);
+
+  if (!isIndexed) {
+    await ragChat.context.add({
+      type: 'html',
+      source: reconstructedUrl,
+      config: {
+        chunkOverlap: 50,
+        chunkSize: 200,
+      },
+      options: {
+        metadata: {
+          title: pageH1,
+        },
+      },
+    });
+    await redis.sadd('indexed-urls', reconstructedUrl);
+  }
+
+  // Criar ou obter a conversa usando a URL original e o H1
+  const conversation = await getOrCreateConversation(
+    user.id,
+    reconstructedUrl,
+    pageH1
+  );
+
+  // Redirecionar para a página de conversa
+  redirect(`/conversations/${conversation.id}`);
+}
+
 function reconstructUrl({ url }: { url: string[] }) {
   const decodedComponents = url.map((component) =>
     decodeURIComponent(component)
@@ -73,52 +121,4 @@ async function getPageH1(url: string): Promise<string | null> {
     console.error('Erro ao obter o H1 da página:', error);
     return null;
   }
-}
-
-export default async function page({ params }: PageProps) {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
-  const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
-  });
-
-  if (!dbUser) {
-    throw new Error('Usuário não encontrado');
-  }
-
-  const reconstructedUrl = reconstructUrl({ url: params.url as string[] });
-
-  // Obter o H1 da página
-  const pageH1 = await getPageH1(reconstructedUrl);
-
-  // Verificar se a URL já foi indexada no Redis
-  const isIndexed = await redis.sismember('indexed-urls', reconstructedUrl);
-
-  if (!isIndexed) {
-    await ragChat.context.add({
-      type: 'html',
-      source: reconstructedUrl,
-      config: {
-        chunkOverlap: 50,
-        chunkSize: 200,
-      },
-      options: {
-        metadata: {
-          title: pageH1,
-        },
-      },
-    });
-    await redis.sadd('indexed-urls', reconstructedUrl);
-  }
-
-  // Criar ou obter a conversa usando a URL original e o H1
-  const conversation = await getOrCreateConversation(
-    user.id,
-    reconstructedUrl,
-    pageH1
-  );
-
-  // Redirecionar para a página de conversa
-  redirect(`/conversations/${conversation.id}`);
 }

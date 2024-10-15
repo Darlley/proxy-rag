@@ -4,7 +4,7 @@ export const plans = [
     name: 'Gratuito',
     description: 'Comece a explorar.',
     price: { monthly: 'R$ 0' },
-    features: [{ limit: 20, name: '20 perguntas por mês' }],
+    features: [{ limit: 2, name: '20 perguntas por mês' }],
     buttonText: 'Começar Grátis',
     mostPopular: false,
   },
