@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Button, ButtonGroup, Textarea } from '@nextui-org/react';
+import { Button, ButtonGroup, Progress, Textarea } from '@nextui-org/react';
 import { Conversation } from '@prisma/client'; // Importe o tipo Conversation
 import { Message, useChat } from 'ai/react';
 import {
@@ -121,9 +121,11 @@ export default function ChatWrapper({
     }
   };
 
+  const requestsPercentage = Math.min((requestsUsed / requestsLimit) * 100, 100);
+
   return (
     <div className="relative flex flex-col h-svh overflow-hidden bg-gray-950">
-      <div className="flex items-center gap-4 w-full justify-start max-w-4xl mx-auto py-4 px-4 sm:px-6">
+      <div className="flex items-center gap-4 w-full justify-between max-w-4xl mx-auto py-4 px-4 lg:px-0">
         <ButtonGroup>
           <Button
             color="primary"
@@ -143,10 +145,11 @@ export default function ChatWrapper({
           />
         </ButtonGroup>
         <DropdownProfile />
+        
         {/* Usando o título da conversa */}
       </div>
 
-      <div className="flex-grow max-h-full h-full overflow-y-auto p-4 sm:p-6">
+      <div className="flex-grow max-h-full h-full overflow-y-auto p-4 lg:p-0">
         <div className="max-w-4xl mx-auto h-full">
           <>
             {messages.length > 0 ? (
@@ -243,6 +246,15 @@ export default function ChatWrapper({
       </div>
 
       <div className="border-t border-gray-900 w-full py-3 md:py-4 px-4 sm:px-6">
+        <div className='max-w-4xl mx-auto mb-4 flex gap-4 items-center'> 
+        <span className='text-sm text-white text-nowrap'>Seu plano permite {requestsLimit} perguntas por mês</span>
+        <Progress
+          color="danger" 
+          aria-label="Progresso de solicitações"
+          value={requestsPercentage} 
+          className="w-full"
+        />
+        </div>
         <form
           onSubmit={handleSendMessage}
           className="mx-auto w-full max-w-4xl flex flex-col gap-2"
