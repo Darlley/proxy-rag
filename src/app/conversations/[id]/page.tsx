@@ -40,7 +40,7 @@ export default async function ConversationPage({ params }: PageProps) {
     <ChatWrapper
       userId={user.id}
       initialMessages={initialMessages}
-      requestsUsed={dbUser.requests}
+      requestsUsed={dbUser.askRequests}
       requestsLimit={requestsLimit}
       conversation={conversation}
     />

@@ -6,6 +6,7 @@ import { Message as PrismaMessage } from '@prisma/client';
 import { Message as AIMessage } from 'ai';
 import { JSDOM } from 'jsdom';
 import { redirect } from 'next/navigation';
+import { plans } from '@/constants/plans';
 
 interface PageProps {
   params: {
@@ -27,13 +28,22 @@ export default async function page({ params }: PageProps) {
 
   const reconstructedUrl = reconstructUrl({ url: params.url as string[] });
 
-  // Obter o H1 da página
-  const pageH1 = await getPageH1(reconstructedUrl);
+  // Obter o limite de artigos com base no plano do usuário
+  const userPlan = plans.find(plan => plan.id === dbUser.stripePriceId) || plans[0];
+  const articleLimit = userPlan.features.find(feature => feature.name.includes('artigos'))?.limit || 2;
+
+  // Verificar se o usuário atingiu o limite de artigos
+  if (dbUser.vectorRequests >= articleLimit) {
+    throw new Error(`Você atingiu o limite de ${articleLimit} artigos indexados por dia para o seu plano.`);
+  }
 
   // Verificar se a URL já foi indexada no Redis
   const isIndexed = await redis.sismember('indexed-urls', reconstructedUrl);
 
   if (!isIndexed) {
+    // Obter o H1 da página
+    const pageH1 = await getPageH1(reconstructedUrl);
+
     await ragChat.context.add({
       type: 'html',
       source: reconstructedUrl,
@@ -51,13 +61,19 @@ export default async function page({ params }: PageProps) {
       },
     });
     await redis.sadd('indexed-urls', reconstructedUrl);
+
+    // Incrementar o contador de vectorRequests
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { vectorRequests: { increment: 1 } },
+    });
   }
 
   // Criar ou obter a conversa usando a URL original e o H1
   const conversation = await getOrCreateConversation(
     user.id,
     reconstructedUrl,
-    pageH1
+    await getPageH1(reconstructedUrl)
   );
 
   // Redirecionar para a página de conversa

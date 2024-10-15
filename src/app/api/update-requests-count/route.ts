@@ -10,19 +10,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
 
-  const { increment } = await req.json();
-
   try {
+    const { userId, incrementAskRequests } = await req.json();
+
+    if (userId !== user.id) {
+      return NextResponse.json({ error: 'Usuário inválido' }, { status: 400 });
+    }
+
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { id: userId },
       data: {
-        requests: {
-          increment: increment,
-        },
+        askRequests: { increment: incrementAskRequests },
       },
     });
 
-    return NextResponse.json({ success: true, requests: updatedUser.requests });
+    return NextResponse.json({ success: true, askRequests: updatedUser.askRequests });
   } catch (error) {
     console.error('Erro ao atualizar contagem de solicitações:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });

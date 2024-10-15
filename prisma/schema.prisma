@@ -40,7 +40,8 @@ model User {
   stripeSubscriptionStatus String?
   stripePriceId           String?
 
-  requests                Int      @default(0)
+  askRequests             Int      @default(0)
+  vectorRequests          Int      @default(0)
 
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt

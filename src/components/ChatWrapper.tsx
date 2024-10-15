@@ -104,7 +104,7 @@ export default function ChatWrapper({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId, increment: 1 }),
+        body: JSON.stringify({ userId, incrementAskRequests: 1 }),
       });
 
       if (!updateResponse.ok) {
@@ -156,7 +156,7 @@ export default function ChatWrapper({
       </div>
 
       <div className="flex-grow max-h-full h-full overflow-y-auto p-4 lg:p-0">
-        <div className="max-w-4xl mx-auto h-full">
+        <div className="max-w-4xl mx-auto h-full mb-4 flex flex-col gap-4">
           <>
             {messages.length > 0 ? (
               messages.map((currentMessage, index) => (
