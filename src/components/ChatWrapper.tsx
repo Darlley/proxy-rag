@@ -40,7 +40,7 @@ export default function ChatWrapper({
   const { messages, handleInputChange, input, handleSubmit, setInput } =
     useChat({
       api: '/api/chat-stream',
-      body: { userId, conversationId: conversation.id },
+      body: { userId, conversationId: conversation.id, url: conversation.url },
       initialMessages,
       onFinish: async (message) => {
         // Salvar a mensagem no banco de dados

@@ -44,6 +44,8 @@ export default async function page({ params }: PageProps) {
       options: {
         metadata: {
           title: pageH1,
+          userId: user.id,
+          url: reconstructedUrl,
         },
       },
     });

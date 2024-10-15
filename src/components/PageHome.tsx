@@ -89,7 +89,7 @@ export default function PageHome({
                 secondImage="/result.png"
                 firstImageClassName="object-cover object-left-top w-full"
                 secondImageClassname="object-cover object-left-top w-full"
-                className="w-full h-full rounded-lg"
+                className="w-full h-full rounded-xl border-2 border-gray-700"
                 slideMode="hover"
                 autoplay={true}
               />
