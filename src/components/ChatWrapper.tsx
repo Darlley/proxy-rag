@@ -40,7 +40,10 @@ export default function ChatWrapper({
   const { messages, handleInputChange, input, handleSubmit, setInput } =
     useChat({
       api: '/api/chat-stream',
-      body: { userId, conversationId: conversation.id, url: conversation.url },
+      body: { 
+        sessionId: conversation.id, 
+        url: conversation.url 
+      },
       initialMessages,
       onFinish: async (message) => {
         // Salvar a mensagem no banco de dados
@@ -121,7 +124,10 @@ export default function ChatWrapper({
     }
   };
 
-  const requestsPercentage = Math.min((requestsUsed / requestsLimit) * 100, 100);
+  const requestsPercentage = Math.min(
+    (requestsUsed / requestsLimit) * 100,
+    100
+  );
 
   return (
     <div className="relative flex flex-col h-svh overflow-hidden bg-gray-950">
@@ -145,7 +151,7 @@ export default function ChatWrapper({
           />
         </ButtonGroup>
         <DropdownProfile />
-        
+
         {/* Usando o título da conversa */}
       </div>
 
@@ -246,14 +252,16 @@ export default function ChatWrapper({
       </div>
 
       <div className="border-t border-gray-900 w-full py-3 md:py-4 px-4 sm:px-6">
-        <div className='max-w-4xl mx-auto mb-4 flex gap-4 items-center'> 
-        <span className='text-sm text-white text-nowrap'>Seu plano permite {requestsLimit} perguntas por mês</span>
-        <Progress
-          color="danger" 
-          aria-label="Progresso de solicitações"
-          value={requestsPercentage} 
-          className="w-full"
-        />
+        <div className="max-w-4xl mx-auto mb-4 flex gap-4 items-center">
+          <span className="text-sm text-white text-nowrap">
+            Seu plano permite {requestsLimit} perguntas por mês
+          </span>
+          <Progress
+            color="danger"
+            aria-label="Progresso de solicitações"
+            value={requestsPercentage}
+            className="w-full"
+          />
         </div>
         <form
           onSubmit={handleSendMessage}

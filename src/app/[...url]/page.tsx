@@ -47,6 +47,7 @@ export default async function page({ params }: PageProps) {
           userId: user.id,
           url: reconstructedUrl,
         },
+        namespace: reconstructedUrl
       },
     });
     await redis.sadd('indexed-urls', reconstructedUrl);
@@ -84,19 +85,19 @@ async function getOrCreateConversation(
   url: string,
   h1: string | null
 ) {
+  const decodedUrl = decodeURIComponent(url);
   let conversation = await prisma.conversation.findFirst({
-    where: { userId, url },
+    where: { userId, url: decodedUrl },
     orderBy: { updatedAt: 'desc' },
     include: { messages: true },
   });
 
   if (!conversation) {
     conversation = await prisma.conversation.create({
-      data: { userId, url, title: h1 },
+      data: { userId, url: decodedUrl, title: h1 },
       include: { messages: true },
     });
   } else if (!conversation.title && h1) {
-    // Atualiza o título se ele não existir e o h1 for fornecido
     conversation = await prisma.conversation.update({
       where: { id: conversation.id },
       data: { title: h1 },
